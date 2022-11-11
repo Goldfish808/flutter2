@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_katalk/components/chat_icon_button.dart';
 import 'package:flutter_katalk/components/my_chat.dart';
 import 'package:flutter_katalk/components/ohter_chat.dart';
 import 'package:flutter_katalk/components/time_line.dart';
@@ -56,9 +57,51 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                 ),
               ),
             ),
+            Container(
+              height: 60,
+              color: Colors.white,
+              child: Row(
+                children: [
+                  ChatIconButton(icon: Icon(FontAwesomeIcons.plusSquare)),
+                  Expanded(
+                    child: Container(
+                      child: TextField(
+                        controller: _textController, // 1
+                        maxLines: 1,
+                        style: TextStyle(fontSize: 20),
+                        decoration: InputDecoration(
+                          focusedBorder: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                        ),
+                        onSubmitted: _handleSubmitted, // 2
+                      ),
+                    ),
+                  ),
+                  ChatIconButton(icon: Icon(FontAwesomeIcons.smile)),
+                  ChatIconButton(icon: Icon(FontAwesomeIcons.cog)),
+                ],
+              ),
+            ),
           ],
         ),
       ),
     );
+  }
+
+  void _handleSubmitted(text) {
+    _textController.clear(); // 1
+
+    setState(() {
+      // 2
+      chats.add(
+        MyChat(
+          text: text,
+          time: DateFormat("a K:m") // 3
+              .format(new DateTime.now())
+              .replaceAll("AM", "오전")
+              .replaceAll("PM", "오후"),
+        ),
+      );
+    });
   }
 }
